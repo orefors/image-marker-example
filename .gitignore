@@ -4,7 +4,8 @@
 node_modules/
 android/
 ios/
-.vscode
+.vscode/
+package-lock.json
 
 # Expo
 .expo/

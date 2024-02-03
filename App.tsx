@@ -91,7 +91,7 @@ export default function App() {
             contentFit={'contain'}
             transition={500}
           />
-          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`background size: w:  ${background.width}, h:  ${background.height}`}</Text></View>
+          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`w/o watermark: w:  ${background.width}, h:  ${background.height}`}</Text></View>
         </View>}
       </View>
       <View style={styles.expand}>
@@ -102,7 +102,7 @@ export default function App() {
             contentFit={'contain'}
             transition={800}
           />
-          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`size with watermark: w:  ${withWatermark.width}, h:  ${withWatermark.height}`}</Text></View>
+          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`with watermark: w:  ${withWatermark.width}, h:  ${withWatermark.height}`}</Text></View>
         </View>}
       </View>
     </View>
