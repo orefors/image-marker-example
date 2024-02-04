@@ -1,12 +1,12 @@
 import Marker, { Position, ImageFormat } from "react-native-image-marker"
 import { ImageSource } from 'expo-image';
+import { Platform } from 'react-native';
 
 const wmImage = require('./assets/wm.png');
 
 export const imageWithMark = async (bgImage: string | ImageSource | null) => {
     if (!bgImage)
         return null;
-
 
     const url = await Marker.markImage({
         backgroundImage: {
@@ -22,5 +22,5 @@ export const imageWithMark = async (bgImage: string | ImageSource | null) => {
         saveFormat: ImageFormat.jpg
     })
 
-    return `file:${url}`;
+    return  Platform.OS === 'android'? `file:${url}` : url;
 };

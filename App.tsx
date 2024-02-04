@@ -20,6 +20,7 @@ import * as MediaLibrary from 'expo-media-library';
 
 //save temp file to device
 const saveToDevice = async (item: string) => {
+  await MediaLibrary.requestPermissionsAsync();
   const asset = await MediaLibrary.createAssetAsync(item);
   return asset;
 }
@@ -29,12 +30,8 @@ const bgImage = require('./assets/bg-default.jpg');
 
 export default function App() {
 
-  //get default image details
-  const defaultSource = RnImage.resolveAssetSource(bgImage);
-  const { uri, width, height } = defaultSource;
-
   //various variables
-  const [background, setBackground] = useState<ImageTypes>({ uri, width, height });
+  const [background, setBackground] = useState(bgImage);
   const [withWatermark, setWithWatermark] = useState<ImageTypes | null>(null);
   const [disableWatermarkButton, setDisableWatermarkButton] = useState<boolean>(false);
 
@@ -61,21 +58,28 @@ export default function App() {
 
   //add watermark to current background image
   const addWatermark = async () => {
-    if (background?.uri) {
+    if (background) {
 
-      const wMarked = await imageWithMark(background.uri);
+      try {
+        const wMarked = await imageWithMark(background);
 
-      if (wMarked) {
-        //only reliable way to get correct image dimensions
-        const asset = await saveToDevice(wMarked);
-        const { uri, width, height } = asset;
-        /*************************/
-        setWithWatermark({ uri, width, height });
-        setDisableWatermarkButton(true)
+        if (wMarked) {
+          //only reliable way to get correct image dimensions
+          const asset = await saveToDevice(wMarked);
+          const { uri, width, height } = asset;
+          /*************************/
+          setWithWatermark({ uri, width, height });
+          setDisableWatermarkButton(true)
+        }
+      } catch (error: any) {
+        console.error('error', error);
       }
-
     }
   }
+
+  //get default image details
+  const defaultSource = RnImage.resolveAssetSource(background);
+  const { width, height } = defaultSource;
 
   return (
     <View style={styles.container}>
@@ -86,12 +90,12 @@ export default function App() {
       <View style={styles.expand}>
         {background && <View style={[styles.expand, { backgroundColor: '#eee' }]}>
           <Image
-            source={background?.uri}
+            source={background}
             style={styles.imageStyle}
             contentFit={'contain'}
             transition={500}
           />
-          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`w/o watermark: w:  ${background.width}, h:  ${background.height}`}</Text></View>
+          <View style={styles.infoContainerStyle}><Text style={styles.centerStyle}>{`w/o watermark: w:  ${width}, h:  ${height}`}</Text></View>
         </View>}
       </View>
       <View style={styles.expand}>
